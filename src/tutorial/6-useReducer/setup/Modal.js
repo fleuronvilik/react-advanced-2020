@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 
-const Modal = ({ modalContent }) => {
+const Modal = ({ modalContent, close }) => {
+  useEffect(() => {
+    setTimeout(close, 1000)
+  })
+
   return (
     <div className="modal">
       <p>{modalContent}</p>
