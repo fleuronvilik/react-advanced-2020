@@ -3,12 +3,19 @@ import Modal from './Modal';
 import { data } from '../../../data';
 
 const reducer = (state, action) => { // reducer function
-  if (action.type === "TESTING") {
+  if (action.type === "ADD_ITEM") {
     return {
       ...state,
-      people: data,
+      people: [...state.people, action.payload],
       modalOpened: true,
-      modalContent: "hello world"
+      modalContent: "item added"
+    }
+  }
+  if (action.type === "NO_VALUE") {
+    return {
+      ...state,
+      modalOpened: true,
+      modalContent: "please enter value"
     }
   }
   throw new Error("no matching action type")
@@ -27,9 +34,11 @@ const Index = () => {
   const handleSubmit = e => {
     e.preventDefault()
     if (name) {
-      dispatch({ type: "TESTING"})
+      const newItem = {id: `${Date.now()}`,name}
+      dispatch({ type: "ADD_ITEM", payload: newItem})
+      setName("")
     } else {
-      dispatch({ type: "RANDOM" }) // not handled by reducer, expect error to be thrown
+      dispatch({ type: "NO_VALUE" })
     }
   }
 
@@ -37,13 +46,12 @@ const Index = () => {
     <>
       {state.modalOpened && <Modal modalContent={state.modalContent}/>}
       <form className="form" onSubmit={handleSubmit}>
-        <div className="form-control">
+        <div>
           <input
             type="text"
             value={name}
             aria-label="name"
             onChange={e => setName(e.target.value)}
-            name="name"
           />
         </div>
         <button type="submit">add</button>
